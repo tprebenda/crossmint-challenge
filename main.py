@@ -6,9 +6,9 @@ _API_URL = "https://challenge.crossmint.io/api"
 _CANDIDATE_ID = "95d446bf-5b0b-4805-bd71-d9e131343ba0"
 _GRID_SIZE = 10
 
-# Retry session to avoid 429 Responses when querying the POST /polyanet endpoint
+# Retry session to mitigate 429 Responses when querying the POST /polyanet endpoint
 s = requests.Session()
-retries = Retry(total=5, backoff_factor=2, status_forcelist=[429], allowed_methods=["POST"])
+retries = Retry(total=5, backoff_factor=1, status_forcelist=[429], allowed_methods=["POST"])
 
 s.mount("https://", HTTPAdapter(max_retries=retries))
 
