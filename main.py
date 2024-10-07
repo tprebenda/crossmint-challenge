@@ -18,9 +18,9 @@ s.mount("https://", HTTPAdapter(max_retries=retries))
 def post_polyanet(row: int, column: int) -> None:
     """Sends a POST request to Challenge API to create polyanet at given row/column coordinates.
 
-    Keyword arguments:
-    row: position on y axis of polyanet grid.
-    column: position on x axis of polyanet grid.
+    Keyword arguments-
+    row (int): position on y axis of polyanet grid.
+    column (int): position on x axis of polyanet grid.
 
     """
     endpoint = f"{API_URL}/polyanets"
