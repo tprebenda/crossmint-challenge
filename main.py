@@ -15,7 +15,7 @@ retries = Retry(total=5, backoff_factor=1, status_forcelist=[429], allowed_metho
 s.mount("https://", HTTPAdapter(max_retries=retries))
 
 
-def post_polyanet(row: int, column: int) -> None:
+def create_polyanet_at(row: int, column: int) -> None:
     """Sends a POST request to Challenge API to create polyanet at given row/column coordinates.
 
     Keyword arguments-
@@ -32,9 +32,9 @@ def post_polyanet(row: int, column: int) -> None:
 
 def create_polyanet_across() -> None:
     """Creates the X-shape polyanet grid for Phase 1 of the Challenge."""
-    for coordinate in range(2, 9):
-        post_polyanet(coordinate, coordinate)
-        post_polyanet(PHASE_1_GRID_SIZE - coordinate, coordinate)
+    for i in range(2, 9):
+        create_polyanet_at(i, i)
+        create_polyanet_at(PHASE_1_GRID_SIZE - i, i)
 
 
 # Goal map endpoint: https://challenge.crossmint.io/api/map/95d446bf-5b0b-4805-bd71-d9e131343ba0
@@ -45,7 +45,8 @@ def create_crossmint_logo() -> None:
     # TODO
 
 
-def main():
+def main() -> None:
+    # Phase 1
     create_polyanet_across()
 
 
