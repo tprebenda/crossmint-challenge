@@ -7,7 +7,6 @@ from argparse import ArgumentParser
 API_URL = "https://challenge.crossmint.io/api"
 CANDIDATE_ID = "95d446bf-5b0b-4805-bd71-d9e131343ba0"
 PHASE_1_GRID_SIZE = 10
-PHASE_2_GRID_SIZE = 30
 PHASE_2_GRID_CENTER = 13
 # (row, column)
 DIRECTION_MODIFIER = {
@@ -20,9 +19,9 @@ DIRECTION_MODIFIER = {
 # Literals
 CHALLENGE_PHASE = Literal["phase1", "phase2"]
 ASTRAL_ENTITY = Literal["polyanet", "soloon", "cometh"]
+DIAGONAL_DIRECTION = Literal["up-right", "up-left", "down-right", "down-left"]
 SOLOON_COLOR = Literal["blue", "red", "purple", "white"]
 COMETH_DIRECTION = Literal["up", "down", "left", "right"]
-DIAGONAL_DIRECTIONS = Literal["up-right", "up-left", "down-right", "down-left"]
 
 # Retry session to mitigate 429 Responses when querying the POST/DELETE endpoints
 # (No "Retry-after" param in response headers, so using exponential backoff)
@@ -50,7 +49,7 @@ def create_crossmint_logo() -> None:
     generate_entity(entity="polyanet", row=PHASE_2_GRID_CENTER, column=PHASE_2_GRID_CENTER - 1)
 
     # Add four 'leaves' of polyanets away from grid center
-    for direction in get_args(DIAGONAL_DIRECTIONS):
+    for direction in get_args(DIAGONAL_DIRECTION):
         generate_leaf_along_diagonal(direction)
 
     # TODO:
@@ -130,7 +129,7 @@ def delete_entity(
         print(f"DELETE request to '/{entity}s' failed: {response.text}")
 
 
-def generate_leaf_along_diagonal(direction: DIAGONAL_DIRECTIONS) -> None:
+def generate_leaf_along_diagonal(direction: DIAGONAL_DIRECTION) -> None:
     """
     Traces along the diagonals of the grid (starting at the center of the shape, row = 13, col = 13),
     and adds polyanets to their correct location based on the offset from the diagonal.
@@ -138,8 +137,8 @@ def generate_leaf_along_diagonal(direction: DIAGONAL_DIRECTIONS) -> None:
     Uses a row + column modifier (either 1 or -1) to account for each direction of the leaves.
 
         Parameters:
-            direction: dirction to use for cometh creation. Must be one of \
-            ["up", "down", "left", "right"]
+            direction: direction of the diagonal leading away from the grid center.
+            Must be one of ['up-right', 'up-left', 'down-right', 'down-left']
 
         Returns:
             None
