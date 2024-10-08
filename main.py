@@ -1,6 +1,7 @@
 import requests
 from requests.adapters import HTTPAdapter, Retry
 from typing import Literal, get_args
+from argparse import ArgumentParser
 
 # Constants
 API_URL = "https://challenge.crossmint.io/api"
@@ -17,6 +18,7 @@ DIRECTION_MODIFIER = {
 }
 
 # Literals
+CHALLENGE_PHASE = Literal["phase1", "phase2"]
 ASTRAL_ENTITY = Literal["polyanet", "soloon", "cometh"]
 SOLOON_COLOR = Literal["blue", "red", "purple", "white"]
 COMETH_DIRECTION = Literal["up", "down", "left", "right"]
@@ -142,6 +144,7 @@ def generate_leaf_along_diagonal(direction: DIAGONAL_DIRECTIONS) -> None:
         Returns:
             None
     """
+    # offset values from the diagonal
     offsets = [1, 2, 3, 4, 3, 3, 2, 2, 1, 1]
     offset_idx = 0
     row_modifier, col_modifier = DIRECTION_MODIFIER[direction]
@@ -154,6 +157,7 @@ def generate_leaf_along_diagonal(direction: DIAGONAL_DIRECTIONS) -> None:
             break
 
         offset = offsets[offset_idx]
+        # initial leaf pattern
         if offset_idx < 3:
             coords = [
                 (diagonal_r + (offset * row_modifier), diagonal_c),
@@ -161,6 +165,7 @@ def generate_leaf_along_diagonal(direction: DIAGONAL_DIRECTIONS) -> None:
                 (diagonal_r, diagonal_c + (offset * col_modifier)),
                 (diagonal_r, diagonal_c + ((offset + 1) * col_modifier)),
             ]
+        # terminal leaf pattern
         else:
             coords = [
                 (diagonal_r + (offset * row_modifier), diagonal_c),
@@ -172,13 +177,15 @@ def generate_leaf_along_diagonal(direction: DIAGONAL_DIRECTIONS) -> None:
         offset_idx += 1
 
 
-def main() -> None:
-    # Phase 1
-    create_polyanet_across()
-
-    # Phase 2
-    create_crossmint_logo()
+def main(phase: CHALLENGE_PHASE) -> None:
+    if phase == "phase1":
+        create_polyanet_across()
+    else:
+        create_crossmint_logo()
 
 
 if __name__ == "__main__":
-    main()
+    parser = ArgumentParser()
+    parser.add_argument("phase", type=str)
+    args = parser.parse_args()
+    main(args.phase)
